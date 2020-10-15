@@ -121,4 +121,5 @@ export const createRelease = async ({
     releaseName
   );
   await commit(androidPublisher, editId, packageName);
+  return bundle.data.versionCode;
 };

@@ -1,5 +1,4 @@
 import { getInput, setFailed, setOutput } from "@actions/core";
-import { existsSync } from "fs";
 import { createRelease } from "./createRelease";
 
 async function main() {
@@ -9,19 +8,15 @@ async function main() {
   const track = getInput("track");
   const releaseName = getInput("releaseName");
 
-  console.log({ keyFile, packageName, aabFile, track, releaseName });
+  const versionCode = await createRelease({
+    keyFile,
+    packageName,
+    aabFile,
+    track,
+    releaseName,
+  });
 
-  console.log({ keyFileExists: existsSync(keyFile) });
-
-  // await createRelease({
-  //   keyFile,
-  //   packageName,
-  //   aabFile,
-  //   track,
-  //   releaseName,
-  // });
-
-  setOutput("versionCode", -1);
+  setOutput("versionCode", versionCode);
 }
 
 main().catch(setFailed);
