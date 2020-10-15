@@ -5,23 +5,23 @@ description: >
   By default the internal test track is used since it most likely that a CI build would target that one.
 inputs:
   keyFile:
-    description: "Path to the service account key file"
+    description: Path to the service account key file (relative the project root)
     required: true
   packageName:
-    description: "Android package name"
+    description: Android package name
     required: true
   aabFile:
-    description: "Path to the aab file"
+    description: Path to the aab file (relative the project root)
     required: true
   track:
-    description: "The track tp publish the aab to (internal, alpha, beta or production)"
+    description: The track tp publish the aab to (internal, alpha, beta or production)
     required: true
     default: internal
   releaseName:
-    description: The name of the new release
+    description: The name of the new release. If not provided the versionCode of the aab will be used.
 outputs:
   versionCode:
-    description: "The version code of the uploaded aab"
+    description: The version code of the uploaded aab
 runs:
   using: "node12"
   main: "dist/index.js"

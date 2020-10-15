@@ -1,0 +1,21 @@
+name: Self test workflow
+
+on:
+  push:
+    branches:
+      - feature/test-action
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+
+      - name: Run self
+        uses: ./
+        with:
+          keyFile: "./src/action.ts"
+          packageName: "package-name"
+          aabFile: "./src/createRelease.ts"
+          releaseName: "releaseName"
