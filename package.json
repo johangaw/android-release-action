@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "Github action for creating a new release on google play console",
   "scripts": {
-    "build": "ncc build src/action.ts"
+    "build": "ncc build src/action.ts --license LICENSE"
   },
   "author": "Johan Gustavsson",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
