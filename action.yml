@@ -4,23 +4,23 @@ description: >
   Upload an Android App Bundle (.aab) to it and select a track.
   By default the internal test track is used since it most likely that a CI build would target that one.
 inputs:
-  keyFile:
+  key-file:
     description: Path to the service account key file (relative the project root)
     required: true
-  packageName:
+  package-name:
     description: Android package name
     required: true
-  aabFile:
+  aab-file:
     description: Path to the aab file (relative the project root)
     required: true
   track:
     description: The track tp publish the aab to (internal, alpha, beta or production)
     required: true
     default: internal
-  releaseName:
+  release-name:
     description: The name of the new release. If not provided the versionCode of the aab will be used.
 outputs:
-  versionCode:
+  version-code:
     description: The version code of the uploaded aab
 runs:
   using: "node12"
