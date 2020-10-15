@@ -24,4 +24,4 @@ outputs:
     description: "The version code of the uploaded aab"
 runs:
   using: "node12"
-  main: "dist/bundle.js"
+  main: "dist/index.js"
