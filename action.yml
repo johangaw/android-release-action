@@ -1,0 +1,27 @@
+name: "Android release action"
+description: >
+  Create a new release on google play console.
+  Upload an Android App Bundle (.aab) to it and select a track.
+  By default the internal test track is used since it most likely that a CI build would target that one.
+inputs:
+  keyFile:
+    description: "Path to the service account key file"
+    required: true
+  packageName:
+    description: "Android package name"
+    required: true
+  aabFile:
+    description: "Path to the aab file"
+    required: true
+  track:
+    description: "The track tp publish the aab to (internal, alpha, beta or production)"
+    required: true
+    default: internal
+  releaseName:
+    description: The name of the new release
+outputs:
+  versionCode:
+    description: "The version code of the uploaded aab"
+runs:
+  using: "node12"
+  main: "dist/bundle.js"

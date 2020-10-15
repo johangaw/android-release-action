@@ -1,13 +1,18 @@
-const { createReadStream } = require("fs");
-const { google } = require("googleapis");
+import { ReadStream, createReadStream } from "fs";
+import { google } from "googleapis";
 
-const getClient = (keyFile) =>
+type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
+
+const getClient = (keyFile: string) =>
   google.auth.getClient({
     keyFile,
     scopes: "https://www.googleapis.com/auth/androidpublisher",
   });
 
-const getAndroidPublisher = (client, packageName) =>
+const getAndroidPublisher = (
+  client: ThenArg<ReturnType<typeof getClient>>,
+  packageName: string
+) =>
   google.androidpublisher({
     version: "v3",
     auth: client,
@@ -16,7 +21,10 @@ const getAndroidPublisher = (client, packageName) =>
     },
   });
 
-const startEdit = (androidPublisher, id) =>
+const startEdit = (
+  androidPublisher: ReturnType<typeof getAndroidPublisher>,
+  id: string
+) =>
   androidPublisher.edits.insert({
     requestBody: {
       id,
@@ -24,7 +32,12 @@ const startEdit = (androidPublisher, id) =>
     },
   });
 
-const upload = (androidPublisher, editId, packageName, aab) =>
+const upload = (
+  androidPublisher: ReturnType<typeof getAndroidPublisher>,
+  editId: string,
+  packageName: string,
+  aab: ReadStream
+) =>
   androidPublisher.edits.bundles.upload({
     editId,
     packageName,
@@ -34,7 +47,14 @@ const upload = (androidPublisher, editId, packageName, aab) =>
     },
   });
 
-const setTrack = (androidPublisher, editId, packageName, track, versionCode) =>
+const setTrack = (
+  androidPublisher: ReturnType<typeof getAndroidPublisher>,
+  editId: string,
+  packageName: string,
+  track: string,
+  versionCode: string,
+  name: string
+) =>
   androidPublisher.edits.tracks.update({
     editId,
     track: track,
@@ -43,6 +63,7 @@ const setTrack = (androidPublisher, editId, packageName, track, versionCode) =>
       track: track,
       releases: [
         {
+          name,
           status: "completed",
           versionCodes: [versionCode],
         },
@@ -50,19 +71,39 @@ const setTrack = (androidPublisher, editId, packageName, track, versionCode) =>
     },
   });
 
-const commit = (androidPublisher, editId, packageName) =>
+const commit = (
+  androidPublisher: ReturnType<typeof getAndroidPublisher>,
+  editId: string,
+  packageName: string
+) =>
   androidPublisher.edits.commit({
     editId,
     packageName,
   });
 
-const getAABStream = (filePath) => createReadStream(filePath);
+const getAABStream = (filePath: string) => createReadStream(filePath);
+const getId = () => String(new Date().getTime());
 
-const publish = async ({ keyFile, packageName, aabFile, track }) => {
+interface SchemaPublish {
+  keyFile: string;
+  packageName: string;
+  aabFile: string;
+  track: string;
+  releaseName: string;
+}
+
+export const createRelease = async ({
+  keyFile,
+  packageName,
+  aabFile,
+  track,
+  releaseName,
+}: SchemaPublish) => {
   const client = await getClient(keyFile);
   const stream = getAABStream(aabFile);
   const androidPublisher = getAndroidPublisher(client, packageName);
-  const edit = await startEdit(androidPublisher);
+  const id = getId();
+  const edit = await startEdit(androidPublisher, id);
   const editId = String(edit.data.id);
   const bundle = await upload(androidPublisher, editId, packageName, stream);
   if (
@@ -76,16 +117,8 @@ const publish = async ({ keyFile, packageName, aabFile, track }) => {
     editId,
     packageName,
     track,
-    String(bundle.data.versionCode)
+    String(bundle.data.versionCode),
+    releaseName
   );
   await commit(androidPublisher, editId, packageName);
 };
-
-publish({
-  keyFile:
-    "/Users/johan.gustavsson/Downloads/pc-api-6556938961238292922-167-13a380f9b113.json",
-  packageName: "com.trackme.android",
-  aabFile:
-    "/Users/johan.gustavsson/AndroidStudioProjects/TrackMe/app/build/outputs/bundle/release/app-release.aab",
-  track: "internal",
-}).catch(console.error);

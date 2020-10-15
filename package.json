@@ -1,17 +1,22 @@
 {
-  "name": "android-publish-action",
-  "version": "1.0.0",
-  "description": "",
+  "name": "android-release-action",
+  "version": "0.1.0",
+  "description": "Github action for creating a new release on google play console",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": ""
   },
-  "author": "",
+  "author": "Johan Gustavsson",
   "license": "ISC",
   "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
     "googleapis": "^61.0.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.24.1"
+    "@types/node": "^12.12.67",
+    "@vercel/ncc": "^0.24.1",
+    "typescript": "^4.0.3"
   }
 }
