@@ -1,6 +1,6 @@
-# Hello world javascript action
+# Android release action
 
-This action is used to create a new release with a specified Android App Bundle (.aab) on google play console.
+This github action is used to create a new release with a specified Android App Bundle (.aab) on google play console.
 
 To allow the action to upload bundles you will nee to connect a service account to your app.
 This is done on google play console under `Settings > Developer Account > API Access`
